@@ -1,0 +1,222 @@
+AIM: To implement memory allocation techniques using
+1.First fit 2.Best fit 3.Worst fit & 4.To make comparative study
+ALGORITHM:
+Step 2: Get the number of memory partition and their sizes.
+Step 3: Get the number of processes and values of block size for each process.
+Step 4: First fit algorithm searches all the entire memory block until a hole which is big enough is
+encountered. It allocates that memory block for the requesting process.
+Step 5: Best-fit algorithm searches the memory blocks for the smallest hole which can be allocated
+to requesting process and allocates if.
+Step 6: Worst fit algorithm searches the memory blocks for the largest hole and allocates it to the
+process.
+Step 7: Analyses all the three memory management techniques and display the best algorithm which
+utilizes the memory resources effectively and efficiently.
+Step 8: Stop the program.
+
+
+program:
+
+
+First fit
+
+
+
+#include<stdio.h>
+// Function to allocate memory to
+// blocks as per First fit algorithm
+void firstFit(int blockSize[], int m, int processSize[], int n)
+{
+ int i, j;
+ // Stores block id of the
+ // block allocated to a process
+ int allocation[n];
+ // Initially no block is assigned to any process
+ for(i = 0; i < n; i++)
+ {
+ allocation[i] = -1;
+ }
+ 
+ // pick each process and find suitable blocks
+ // according to its size ad assign to it
+ for (i = 0; i < n; i++) //here, n -> number of processes
+ {
+ for (j = 0; j < m; j++) //here, m -> number of blocks
+ {
+ if (blockSize[j] >= processSize[i])
+ {
+ // allocating block j to the ith process
+ allocation[i] = j;
+ // Reduce available memory in this block.
+ blockSize[j] -= processSize[i];
+ break; //go to the next process in the queue
+ }
+ }
+ }
+ printf("\nProcess No.\tProcess Size\tBlock no.\n");
+ for (int i = 0; i < n; i++)
+ {
+ printf(" %i\t\t\t", i+1);
+ printf("%i\t\t\t\t", processSize[i]);
+ if (allocation[i] != -1)
+ printf("%i", allocation[i] + 1);
+ else
+ printf("Not Allocated");
+ printf("\n");
+ }
+}
+// Driver code
+int main()
+{
+ int m; //number of blocks in the memory
+ int n; //number of processes in the input queue
+ int blockSize[] = {100, 500, 200, 300, 600};
+ int processSize[] = {212, 417, 112, 426};
+ m = sizeof(blockSize) / sizeof(blockSize[0]);
+ n = sizeof(processSize) / sizeof(processSize[0]);
+ firstFit(blockSize, m, processSize, n);
+ return 0 ;
+}
+
+
+Best fit
+
+#include <stdio.h>
+void implimentBestFit(int blockSize[], int blocks, int processSize[], int proccesses)
+{
+ // This will store the block id of the allocated block to a process
+ int allocation[proccesses];
+ int occupied[blocks];
+ 
+ // initially assigning -1 to all allocation indexes
+ // means nothing is allocated currently
+ for(int i = 0; i < proccesses; i++){
+ allocation[i] = -1;
+ }
+ 
+ for(int i = 0; i < blocks; i++){
+ occupied[i] = 0;
+ }
+ // pick each process and find suitable blocks
+ // according to its size ad assign to it
+ for (int i = 0; i < proccesses; i++)
+ {
+ 
+ int indexPlaced = -1;
+ for (int j = 0; j < blocks; j++) { 
+ if (blockSize[j] >= processSize[i] && !occupied[j])
+ {
+ // place it at the first block fit to accomodate process
+ if (indexPlaced == -1)
+ indexPlaced = j;
+ 
+ // if any future block is smalller than the current block where
+ // process is placed, change the block and thus indexPlaced
+// this reduces the wastage thus best fit
+ else if (blockSize[j] < blockSize[indexPlaced])
+ indexPlaced = j;
+ }
+ }
+ // If we were successfully able to find block for the process
+ if (indexPlaced != -1)
+ {
+ // allocate this block j to process p[i]
+ allocation[i] = indexPlaced;
+ 
+ // make the status of the block as occupied
+ occupied[indexPlaced] = 1;
+ }
+ }
+ printf("\nProcess No.\tProcess Size\tBlock no.\n");
+ for (int i = 0; i < proccesses; i++)
+ {
+ printf("%d \t\t\t %d \t\t\t", i+1, processSize[i]);
+ if (allocation[i] != -1)
+ printf("%d\n",allocation[i] + 1);
+ else
+ printf("Not Allocated\n");
+ }
+}
+// Driver code
+int main()
+{
+ int blockSize[] = {100, 50, 30, 120, 35};
+ int processSize[] = {40, 10, 30, 60};
+ int blocks = sizeof(blockSize)/sizeof(blockSize[0]);
+ int proccesses = sizeof(processSize)/sizeof(processSize[0]);
+ implimentBestFit(blockSize, blocks, processSize, proccesses);
+ return 0 ;
+}
+
+
+Worst fit
+
+
+
+#include <stdio.h>
+void implimentWorstFit(int blockSize[], int blocks, int processSize[], int processes)
+{
+ // This will store the block id of the allocated block to a process
+ int allocation[processes];
+ int occupied[blocks];
+ 
+ // initially assigning -1 to all allocation indexes
+ // means nothing is allocated currently
+ for(int i = 0; i < processes; i++){
+ allocation[i] = -1;
+ }
+ 
+ for(int i = 0; i < blocks; i++){
+ occupied[i] = 0;
+ }
+ // pick each process and find suitable blocks
+ // according to its size ad assign to it
+ for (int i=0; i < processes; i++)
+ {
+int indexPlaced = -1;
+for(int j = 0; j < blocks; j++)
+{
+ // if not occupied and block size is large enough
+ if(blockSize[j] >= processSize[i] && !occupied[j])
+ {
+ // place it at the first block fit to accomodate process
+ if (indexPlaced == -1)
+ indexPlaced = j;
+ 
+ // if any future block is larger than the current block where
+ // process is placed, change the block and thus indexPlaced
+ else if (blockSize[indexPlaced] < blockSize[j])
+ indexPlaced = j;
+ }
+ }
+ // If we were successfully able to find block for the process
+ if (indexPlaced != -1)
+ {
+ // allocate this block j to process p[i]
+ allocation[i] = indexPlaced;
+ 
+ // make the status of the block as occupied
+ occupied[indexPlaced] = 1;
+ // Reduce available memory for the block
+ blockSize[indexPlaced] -= processSize[i];
+ }
+ }
+ printf("\nProcess No.\tProcess Size\tBlock no.\n");
+ for (int i = 0; i < processes; i++)
+ {
+ printf("%d \t\t\t %d \t\t\t", i+1, processSize[i]);
+ if (allocation[i] != -1)
+ printf("%d\n",allocation[i] + 1);
+ else
+ printf("Not Allocated\n");
+ }
+}
+// Driver code
+int main()
+{
+ int blockSize[] = {100, 50, 30, 120, 35};
+ int processSize[] = {40, 10, 30, 60};
+ int blocks = sizeof(blockSize)/sizeof(blockSize[0]);
+ int processes = sizeof(processSize)/sizeof(processSize[0]);
+ implimentWorstFit(blockSize, blocks, processSize, processes);
+ return 0;
+}

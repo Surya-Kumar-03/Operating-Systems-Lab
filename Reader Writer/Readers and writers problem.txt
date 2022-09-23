@@ -1,0 +1,154 @@
+AIM:-
+TO write a program to implement readers and writers problem.
+
+
+ALGORITHM:-
+Step a:- Initialize two semaphore mutex = 1 and db = 1 and rc.
+Step b:- Create two threads one as Reader() another as Writer().
+Reader Process -
+Step 1:- Get exclusive access to rc (lock mutex).
+Step 2:- Increment rc by 1.
+Step 3:- Get the exclusive access bd (lock bd).
+Step 4:- Release exclusive access to rc (unlock mutex).
+Step 5:- Read the data from database.
+Step 6:- Get the exclusive access to rc (lock mutex).
+Step 7:- Decrement rc by 1, if rc = 0 this is the last reader.
+Step 8:- Release exclusive access to database (unlock mutex).
+Step 9:- Release exclusive access to rc (unlock mutex).
+
+
+PROGRAM:-
+#include<stdio.h>
+#include<stdlib.h>
+void main()
+{
+	typedef int semaphore;
+	semaphore sread=0, swrite=0;
+	int ch, r=0;
+	printf("\n Reader writer");
+	do
+	{
+		printf("\n Menu");
+		printf("\n\t 1. Read from file");
+		printf("\n\t 2. Write to file");
+		printf("\n\t 3. Exit the reader");
+		printf("\n\t 4. Exit the writer");
+		printf("\n\t 5. Exit");
+		printf("\n Enter your choice: ");
+		scanf("%d", & ch);
+		switch(ch)
+		{
+			case 1: if(swrite == 0)
+			{
+				sread = 1;
+				r += 1;
+				printf("\n Reader %d reads", r);
+			}
+			else
+			{
+				printf("\n Not possible");
+			}
+			break;
+			case 2: if(sread==0 && swrite==0)
+			{
+				swrite = 1;
+				printf("\n writer in progress");
+			}
+			else if(swrite == 1)
+			{
+				printf("\n Writer writes the files");
+			}
+			else if(sread == 1)
+			{
+				printf("\n Cannot write while reader reads the file");
+			}
+			else
+			{
+				printf("\n Cannot write file");
+			}
+			break;
+			case 3: if(r!=0)
+			{
+				printf("\n The reader %d closes the file", r);
+				r -= 1;
+			}
+			else if(r == 0)
+			{
+				printf("\n Currently no readers access the file");
+				sread = 0;
+			}
+			else if(r == 1)
+			{
+				printf("\n Only 1 reader file");
+			}
+			else
+			{
+				printf("%d reader are reading the file \n", r);
+			}
+			break;
+			case 4: if(swrite == 1)
+			{
+				printf("\n Writer close the file");
+				swrite = 0;
+			}
+			else
+			{
+				printf("\n There is no writer in the file");
+			}
+			break;
+			case 5: exit(0);
+		}
+	}
+	while(ch < 6);
+}
+
+
+OUTPUT:-
+Reader Writer
+Menu
+	1. Read from file
+	2. Write to file
+	3. Exit the reader
+	4. Exit the writer
+	5. Exit
+Enter your choice: 1
+Reader 1 reads
+Menu
+	1. Read from file
+	2. Write to file
+	3. Exit the reader
+	4. Exit the writer
+	5. Exit
+Enter your choice: 2
+Cannot write while reader reads the file.
+Menu
+	1. Read from file
+	2. Write to file
+	3. Exit the reader
+	4. Exit the writer
+	5. Exit
+Enter your choice: 3
+Reader 1 closes the file
+Menu
+	1. Read from file
+	2. Write to file
+	3. Exit the reader
+	4. Exit the writer
+	5. Exit
+Enter your choice: 3
+Currently no readers access the file
+Menu
+	1. Read from file
+	2. Write to file
+	3. Exit the reader
+	4. Exit the writer
+	5. Exit
+Enter your choice: 2
+Writer in progress
+Menu
+	1. Read from file
+	2. Write to file
+	3. Exit the reader
+	4. Exit the writer
+	5. Exit
+Enter your choice:

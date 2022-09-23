@@ -1,0 +1,76 @@
+AIM:-
+To  write a program to implement producer consumer problem.
+
+
+ALGORITHM:-
+Step 1 - Start
+Step 2 - Let n be the size of the buffer.
+Step 3 - Check if there are any producer.
+Step 4 - If yes check whether the buffer is full.
+Step 5 - If no the producer item is stored in the buffer.
+Step 6 - If the buffer is full the producer has to wait.
+Step 7 - Check there is any consumer. If yes check whether the buffer is empty.
+Step 8 - If no the consumer consumes them from the buffer.
+Step 9 - If the buffer is empty, the consumer has to wait.
+Step 10- Repeat checking for the producer and consumer till required.
+Step 11- Terminate the process.
+
+
+PROGRAM:-
+#include<stdio.h>
+int main()
+{
+	int n, count=0;
+	int b;
+	printf("Enter Buffer size \n");
+	scanf("%d", &b);
+	printf("1. If producer enter 1 \n");
+	printf("2. If Consumer enter 2 \n");
+	printf("3. For Exit enter 3 \n");
+	while(1)
+	{
+		scanf("%d", &n);
+		if(n==1 && count <= (b-1))
+		{
+			count += 1;
+			printf("Producer produce item %d\n", count);
+		}
+		else if(n==1 && count==b)
+		{
+			printf("Buffer Overflow");
+		}
+		else if(n==2 && count>0)
+		{
+			printf("Consumer consumes %d\n", count);
+			count -= 1;
+		}
+		else if(n==2 && count==0)
+		{
+			printf("Buffer empty");
+		}
+		else if(n == 3)
+		{
+			break;
+		}
+	}
+	return 0;
+}
+
+
+OUTPUT:-
+Enter Buffer Size: 3
+
+1. If Producer enter 1
+2. If Consumer enter 2
+3. For exit enter 3
+
+1
+Producer produces item 1
+1
+Producer produces item 2
+2
+Consumer consumes item 2
+2
+Consumer consumes item 1
+2
+Buffer is Empty.
